@@ -21,10 +21,10 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $userCredionals = $request->validate([
-            'username' => "required",
+            'email' => "required",
             'password' => "required",
         ]);
-        if ($token = Auth::guard('api')->attempt(['username' =>$userCredionals['username'], 'password' => $userCredionals['password'], 'role_type' => 2])) {
+        if ($token = Auth::guard('api')->attempt(['email' =>$userCredionals['email'], 'password' => $userCredionals['password'], 'role_type' => 2])) {
 
             return $this->respondWithToken($token);
         }
@@ -77,7 +77,8 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60
+            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
+            'user' => Auth::guard('api')->user(),
         ]);
     }
 
